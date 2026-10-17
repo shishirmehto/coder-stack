@@ -1,0 +1,4 @@
+.DS_Store
+.claude/settings.local.json
+.claude/worktrees/
+.claude/coder-stack-models.md
