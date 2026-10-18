@@ -1,6 +1,6 @@
 # coder-stack port notes
 
-Installed as project skills (`.claude/skills/`) and agents (`.claude/agents/`), so it loads only in this repo. Entry point is `/coder-mode`.
+Ships as the `coder-stack` Claude Code plugin, with skills in `skills/` and agents in `agents/`. Entry point is `/coder-stack:coder-mode`.
 
 ## What changed from upstream
 
@@ -31,4 +31,4 @@ Also changed:
 
 ## Scripts
 
-- `coder-mode/scripts` needs `bun`. It installs its own `node_modules/` on first run, which is gitignored.
+- `skills/coder-mode/scripts` needs `bun`. It installs its own `node_modules/` on first run, which is gitignored.

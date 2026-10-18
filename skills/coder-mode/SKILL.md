@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 The Principles section below grounds every trigger. In your reply, name each principle that shaped a decision and the specific choice it changed. Cite only principles whose leaf SKILL.md you read this session.
 
-A bold skill name is a handoff, not a hint. When its trigger fires, load that skill with the Skill tool (`skill: "how"`) and follow it. Writing its output shape from memory does not count. Load a principle leaf the same way before you cite it.
+A bold skill name is a handoff, not a hint. When its trigger fires, load that skill with the Skill tool and follow it. Every skill in this stack ships in the `coder-stack` plugin, so call it by its namespaced name (`skill: "coder-stack:how"`). Writing its output shape from memory does not count. Load a principle leaf the same way before you cite it.
 
 Remaining triggers:
 
@@ -88,7 +88,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Use `subagent_type: "coder-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/coder-mode` and `coder-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `coder-agent`.
+**Use `subagent_type: "coder-stack:coder-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/coder-mode` and `coder-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `coder-agent`.
 
 **Defaults for every `Agent` call.** `run_in_background: true`, file pointers not inlined context, explicit model per role (configurable via `/setup-coder-stack`. Defaults `sonnet` for code, `opus` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`opus`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-coder-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Agent `model`). Each code playbook's configured model comes from its line (`feature, refactoring`, `bug-fix`, `perf-issue`, or `hillclimb`), and the hardest changes read `hardest tasks`. Prose and judgment read `judgment and prose`.
 
@@ -113,6 +113,8 @@ Every playbook ends with a reply written this way, PR link as `https://github.co
 Comments follow the same rule as the reply. Write them clean as you go. Keep a comment only for a non-obvious *why* the code can't show. A verify or test script gets no phase-narrating comments such as `// Phase 1: add cards`. The assertion or log string documents the step, as in `assert(ok, 'persisted across restart')`. This applies to every file you produce, including the delegate's diff.
 
 ## Playbooks
+
+Every `playbooks/`, `scripts/`, and `references/` path in this skill and its playbooks is relative to this skill's directory, the folder that holds this SKILL.md (`${CLAUDE_SKILL_DIR}`). Your shell starts in the user's project, so prefix that directory when you open a playbook or run a script.
 
 Open a todolist whose first items are the matched playbook's steps, copied in verbatim, before any task-specific todos. A step you choose not to do stays in the list with a one-line `skip: <reason>`. Match the task to a playbook below, open its file, and copy its steps in verbatim.
 

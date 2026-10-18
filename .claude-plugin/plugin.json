@@ -1,0 +1,12 @@
+{
+  "name": "coder-stack",
+  "description": "Skills and agents that set how a coding agent works: short, detailed replies, deliberate subagents, simple code, and proof that each change works.",
+  "author": {
+    "name": "Shishir Mehto",
+    "url": "https://github.com/shishirmehto"
+  },
+  "homepage": "https://github.com/shishirmehto/coder-stack",
+  "repository": "https://github.com/shishirmehto/coder-stack",
+  "license": "MIT",
+  "keywords": ["coding-agent", "workflow", "skills", "subagents", "code-review"]
+}
