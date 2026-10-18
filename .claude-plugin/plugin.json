@@ -7,6 +7,5 @@
   },
   "homepage": "https://github.com/shishirmehto/coder-stack",
   "repository": "https://github.com/shishirmehto/coder-stack",
-  "license": "MIT",
   "keywords": ["coding-agent", "workflow", "skills", "subagents", "code-review"]
 }
