@@ -2,7 +2,7 @@
 
 **You own the measurement story. Plan, review, verify the numbers.** Tie every fix to a measurement, don't read source instead of measuring.
 
-1. Capture a baseline trace via the matching control skill.
+1. Capture a baseline trace via the matching control skill. When its data is too small to show the cost (an empty or seeded database, a list query whose cost grows with OFFSET or with other tenants' rows), the baseline is a read-only `EXPLAIN ANALYZE` on production-sized data at representative depths. When other sessions share the machine (parallel owners, a full test gate running), run an A/A comparison first and claim only deltas above that noise floor. Run perf lanes and full test gates one at a time, not side by side.
 2. `how` to ground hypotheses. Don't claim a perf ceiling without running it first.
    Most fixes come from eight strategy families. Use them as hypothesis generators, not a checklist. A family earns an attempt only when the trace shows the signal it names.
    - **Elimination.** Before optimizing the hot path, ask whether it needs to exist: a computation nobody consumes, a feature gate that's always off for this user, a sync that redundantly mirrors state, a legacy path kept "just in case". The trace shows what's slow, never that it's deletable, so this family needs the `how` pass, not the profiler.
