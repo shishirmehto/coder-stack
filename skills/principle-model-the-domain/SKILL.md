@@ -20,6 +20,8 @@ Encode the real domain in a data structure instead of scattering it across condi
 - A queue, cache, index, graph/tree, or normalized collection where the data access pattern calls for it.
 - Any other structure that fits. When none fits, work out what the code must never allow and how the data gets read, then find the structure that encodes exactly that.
 
+When another system owns an enum's values (a server status, a webhook event type), an exhaustive switch only catches values added on your side first. A value the other side adds first goes through your parser's fallback. Decide that fallback for each behaviour separately (display, open, select, retry) and test it. Anything that grants access or an action fails closed.
+
 Do not force an abstraction. Prefer boring code if the current shape is already clear, local, and unlikely to grow. Be skeptical of an abstraction that adds indirection without removing branches, duplicated rules, invalid states, or lifecycle risk.
 
 The sign that you skipped this is a new feature that grows an existing if/else chain by one more branch, or a second boolean that must stay in sync with the first. Temporal decomposition is another sign. Phase-named modules repeat the same domain rules across steps.

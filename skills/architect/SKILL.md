@@ -27,6 +27,8 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 ## Phase B: Sketch
 
+Start only after Phase A's grounding artifact is written. A path to an artifact that is still being written is not grounding: each runner re-explores the subsystem, and the candidates then differ by what each happened to find.
+
 Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Each candidate produces a design package shaped per `references/rationale-template.md`.
 
 Take the runners from the `architect runners` line in the `.claude/coder-stack-models.md` sheet, in place of the `arena runners` line. If the sheet or that line is missing, use `opus`, `fable`, `sonnet`. Alias and rejected entries follow the runner rules in the **arena** skill's Phase A.
