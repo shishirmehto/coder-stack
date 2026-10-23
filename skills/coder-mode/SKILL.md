@@ -25,7 +25,7 @@ Remaining triggers:
 - Docs, RFCs, readmes, PR descriptions, or commit messages → the **technical-writing** skill (`/technical-writing`).
 - Before commit → the built-in `/simplify` skill.
 - Before review → the **no-comments** skill (`/no-comments`).
-- Shipping UI / IDE / CLI → the matching control surface. The built-in `/run` skill launches and drives CLIs, TUIs, and servers. The browser tools drive browser and web UIs. For bug fixes, reproduce first on the same surface yourself. Hand to the user only under the narrow Bug fix step 1 exception.
+- Shipping UI / IDE / CLI → the matching control surface. The built-in `/run` skill launches and drives CLIs, TUIs, and servers. The browser tools drive browser and web UIs. When the repo ships its own `verify-<app>` skill, that skill is the control surface for that app: run it, and say in any "done", "ready" or "reviewed" reply whether it ran and what it could not cover. For bug fixes, reproduce first on the same surface yourself. Hand to the user only under the narrow Bug fix step 1 exception.
 - Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`). That includes "babysit this", "get it green", "address the bugbot comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling. The playbook's step 1 owns the request-to-mode mapping. Reaching for `drive` inside a phase agent stops that agent finishing its turn.
 - Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - Bugbot or the agentic security review commented → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so assess each on its merits and dismiss noise with a concrete reason instead of churning code. Triage fix / dismiss / ask per `references/bugbot-triage.md`.
@@ -76,11 +76,13 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Autonomy
 
-**This repo's rules win.** Where this skill conflicts with the repo's `CLAUDE.md`, `CLAUDE.md` governs. Ask before building on an ambiguous reading. Never bypass hooks. On a repo with no required checks, never `gh pr merge --auto`: it merges at once. Use `gh pr checks <pr> --watch && gh pr merge <pr>`.
+**This repo's rules win.** Where this skill conflicts with the repo's `CLAUDE.md`, `CLAUDE.md` governs. Ask before building on an ambiguous reading. Never bypass hooks. On a repo with no required checks, never `gh pr merge --auto`: it merges at once. Use `gh pr checks <pr> --watch && gh pr merge <pr> <method>` with the repo's merge method (Shipping step 5).
 
 **Just do it.** Use any MCP tool. Reversible local work and read-only lookups proceed without asking. Posting to team chat, updating tickets, and other outward-facing actions need the user's direction.
 
 **Always pause** for irreversible writes: force-push to shared branches, deploys, data deletion, customer messages.
+
+**A refusal ends that route.** When the permission classifier refuses a merge, deploy, prod read or write, or credential access, do not retry it, rephrase it, or reach the same effect another way, even though the refusal text says you may try other tools. Ask the user once for an approval that names the action and its target ("merge PR #198 into main with a merge commit"), then run it once. If it is refused again, hand the user the exact command to run with `!`, filled in and runnable as pasted, with the output to expect. Afterwards, confirm the end state yourself (PR state, run status, row count) before you report it done.
 
 **Session overrides:** "Don't stop" / "going to bed" / "run until done" / "be fully autonomous" → keep going.
 
@@ -91,6 +93,8 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 **Use `subagent_type: "coder-stack:coder-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/coder-mode` and `coder-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `coder-agent`.
 
 **Defaults for every `Agent` call.** `run_in_background: true`, file pointers not inlined context, explicit model per role (configurable via `/setup-coder-stack`. Defaults `sonnet` for code, `opus` for prose and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to your strongest judgment model (`opus`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your fast code model. Per-role lines in the `/setup-coder-stack` rule override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Agent `model`). Each code playbook's configured model comes from its line (`feature, refactoring`, `bug-fix`, `perf-issue`, or `hillclimb`), and the hardest changes read `hardest tasks`. Prose and judgment read `judgment and prose`.
+
+**A session you start does not inherit this skill.** A session started with `start_session` (or any new chat) runs without coder-mode, and coder-mode is user-only, so the child cannot load it with the Skill tool and must not `cat` its SKILL.md as a workaround. Write the brief so the child does its code work through `subagent_type: "coder-stack:coder-agent"`, name the playbook it follows, and list the gates you expect (review, verification, the repo's test gate). When the child reports, check that those gates ran before you build on its result.
 
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary. A second opinion is the same prompt against a different model. Agreement is high-signal.
 
