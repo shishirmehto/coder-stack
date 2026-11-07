@@ -7,7 +7,8 @@ import type {
   PrContext,
   PullRequestFacts,
   Repository,
-  ReviewThread,
+  RawReviewThread,
+  ReviewThreadPage,
   RollupPage,
 } from "./types.ts";
 import { parsePrNumber } from "./types.ts";
@@ -16,7 +17,9 @@ export interface FakeReaderOptions {
   readonly facts?: Partial<Omit<PullRequestFacts, "context">>;
   readonly fastPath?: ChecksFastPath;
   readonly rollupPages?: readonly RollupPage[];
-  readonly threads?: readonly ReviewThread[];
+  // Raw threads, as GitHub returns them. The reader derives isBugbot and the pass count.
+  readonly threads?: readonly RawReviewThread[];
+  readonly threadPages?: readonly ReviewThreadPage[];
   readonly commitRollups?: readonly CommitRollup[];
   readonly openPullRequests?: readonly OpenPullRequest[];
   readonly origin?: Repository | null;
@@ -78,6 +81,7 @@ export function fakeReader(
     isDraft: false,
   };
   let page = 0;
+  let threadPage = 0;
   return {
     calls,
     async originRepo() {
@@ -106,9 +110,12 @@ export function fakeReader(
       calls.push(`checkRollupPage:${after ?? "null"}`);
       return options.rollupPages?.[page++] ?? { checks: [], endCursor: null };
     },
-    async reviewThreads() {
-      calls.push("reviewThreads");
-      return options.threads ?? [];
+    async reviewThreadPage(_requested, after) {
+      calls.push(`reviewThreadPage:${after ?? "null"}`);
+      return options.threadPages?.[threadPage++] ?? {
+        threads: options.threads ?? [],
+        endCursor: null,
+      };
     },
     async commitRollups() {
       calls.push("commitRollups");

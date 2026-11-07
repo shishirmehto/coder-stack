@@ -91,6 +91,9 @@ The default answer is `/coder-mode`, which runs most of the others when its step
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
 | Pick a model for each role | [`/setup-coder-stack`](../setup-coder-stack/SKILL.md) |
+| Build a page or dashboard whose buttons start a cloud scheduled task | [`/make-bot-ui`](../make-bot-ui/SKILL.md) |
+| Have cloud tasks triage Slack bug reports and reproduce them into draft pull requests | [`/setup-issue-bot`](../setup-issue-bot/SKILL.md) |
+| Run work unattended, or decide what auto mode may do | [`docs/automations.md`](../../docs/automations.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |

@@ -24,8 +24,6 @@ Also changed:
 
 ## Not ported
 
-- `make-bot-ui` is dropped. It drives Cursor Automations webhooks.
-- `automations/benny` is dropped. It is a Cursor Automations pack.
 - `docs/guide` is dropped. It is a Cursor walkthrough.
 - The multi-vendor review panels are Claude-only now. `arena`, `interrogate`, and `architect` compare Claude models against each other.
 

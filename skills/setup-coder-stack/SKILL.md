@@ -21,7 +21,7 @@ The defaults are the sheet shown in step 4. If `.claude/coder-stack-models.md` e
 
 ### 3. Show the roles and confirm
 
-Show every role with its model and list each line step 2 dropped. Ask with AskUserQuestion whether to accept as-is or change specific roles, offering the four models plus `inherit-parent`. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, and Arena picks one entry whose family differs from the parent's when possible. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
+Show every role with its model and list each line step 2 dropped. Ask with AskUserQuestion whether to accept as-is or change specific roles, offering the four models plus `inherit-parent`. For panel roles (arena runners, architect runners, interrogate reviewers) the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena runs one judge. It tries only entries from a family other than the parent's, in list order, so order it by preference. An `inherit-parent` or `auto` entry never judges. `swarm workers` is the default model for every worker unless a race or comparison assigns another model per arm.
 
 ### 4. Write the sheet
 
@@ -40,13 +40,13 @@ how explorer: sonnet
 how explainer: opus
 why investigators: sonnet
 why synthesizer: opus
-reflect tooling: fable
+reflect tooling: sonnet
 reflect judgment, divergent, synthesizer: opus
-arena runners: opus, fable, sonnet
-arena cross-judge pool: opus, fable, sonnet
+arena runners: opus, sonnet
+arena cross-judge pool: opus, sonnet
 swarm workers: sonnet
-architect runners: opus, fable, sonnet
-interrogate reviewers: opus, fable, sonnet
+architect runners: opus, sonnet
+interrogate reviewers: opus, sonnet
 ```
 
 ### 5. Confirm
