@@ -27,7 +27,7 @@ Load the issue-bot configuration file that the task prompt names. If the config,
 - Apply the **principle-guard-the-context-window** skill to delegated analysis.
 - Apply the **principle-sequence-verifiable-units**, **principle-fix-root-causes**, and **principle-prove-it-works** skills through repro, fix, and verification.
 
-The repository's `.claude/settings.json` carries a PreToolUse hook on every Slack tool, and `ask` rules that pause the run before `gh pr merge` or `gh pr ready`. The hook denies a post or file share in the source channel without `thread_ts` or with `reply_broadcast`, and any Slack call from a subagent other than a read. A denial or a pause from either is a bug in this run. Stop and report it in the run transcript. Never work around it.
+The repository's `.claude/settings.json` carries a PreToolUse hook on every Slack tool, and `ask` rules that pause the run before `gh pr merge` or `gh pr ready`. The hook denies a post or file share in the source channel without `thread_ts` or with `reply_broadcast`, any Slack call from a subagent other than a read, and any Slack write other than a post, a file share, or a reaction. A denial or a pause from either is a bug in this run. Stop and report it in the run transcript. Never work around it.
 
 ## 1. Find the report and freeze its coordinates
 

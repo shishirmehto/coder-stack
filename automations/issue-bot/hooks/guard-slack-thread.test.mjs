@@ -82,6 +82,33 @@ test("allows the coordinator's status reaction on a guarded root", () => {
   );
 });
 
+test("lets the coordinator start a file upload but no other non-posting write", () => {
+  assert.equal(run({ tool_name: "mcp__slack__slack_get_file_upload_url", tool_input: { filename: "a.png", content_length: 1 } }), "allow");
+  for (const tool of ["create_canvas", "update_canvas", "create_conversation", "add_list_record", "some_future_write"]) {
+    assert.equal(run({ tool_name: `mcp__slack__slack_${tool}`, tool_input: { title: "x" } }), "deny", tool);
+  }
+});
+
+test("normalizes channel_id before comparing it", () => {
+  assert.equal(run(send({ channel_id: " c111 " })), "deny");
+  assert.equal(run(send({ channel_id: 111 })), "deny", "a non-string channel_id");
+  assert.equal(run(send({ channel_id: ["C111"] })), "deny", "an array channel_id");
+  assert.equal(run(send({})), "deny", "a post with no channel_id");
+});
+
+test("denies destination fields it does not check", () => {
+  assert.equal(run(send({ channel_id: "C999", channel: "C111" })), "deny");
+  assert.equal(run(upload({ channels: "C111" })), "deny", "an upload shared through channels");
+  assert.equal(run(send({ channel_id: "C999", channel_name: "bugs" })), "deny");
+});
+
+test("denies any reply_broadcast value other than false in a guarded channel", () => {
+  const reply = { channel_id: "C111", thread_ts: "1700000000.000100" };
+  assert.equal(run(send({ ...reply, reply_broadcast: "true" })), "deny");
+  assert.equal(run(send({ ...reply, reply_broadcast: 1 })), "deny");
+  assert.equal(run(send({ ...reply, reply_broadcast: false })), "allow");
+});
+
 test("ignores tools that are not Slack tools", () => {
   assert.equal(run({ tool_name: "Bash", tool_input: { command: "ls" } }), "allow");
 });

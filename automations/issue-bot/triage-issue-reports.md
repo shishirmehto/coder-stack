@@ -22,7 +22,7 @@ Load the issue-bot configuration file that the task prompt names. If the config 
 - Apply the **principle-separate-before-serializing-shared-state** skill to source coordinates.
 - Apply the **principle-minimize-reader-load** and **unslop** skills to the final verdict.
 
-The repository's `.claude/settings.json` carries a PreToolUse hook on every Slack tool. It denies a post or file share in the source channel without `thread_ts` or with `reply_broadcast`, and any Slack call from a subagent other than a read. A denial from that hook is a bug in this run. Stop and report it in the run transcript. Never work around it.
+The repository's `.claude/settings.json` carries a PreToolUse hook on every Slack tool. It denies a post or file share in the source channel without `thread_ts` or with `reply_broadcast`, any Slack call from a subagent other than a read, and any Slack write other than a post, a file share, or a reaction. A denial from that hook is a bug in this run. Stop and report it in the run transcript. Never work around it.
 
 ## 1. Find the report and freeze its coordinates
 

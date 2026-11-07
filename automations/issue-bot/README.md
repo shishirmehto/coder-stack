@@ -32,7 +32,7 @@ Operational file: [`reproduce-and-fix-issues.md`](reproduce-and-fix-issues.md).
 - The source channel ID and each report's root thread timestamp stay fixed for the whole run.
 - Utility and debug bots in a thread are evidence, not fix owners.
 - Subagents may help, but only as `issue-bot-reader` or `issue-bot-editor`. Their `tools` lists carry no MCP tools, so they can't reach Slack or the tracker. The **how** and **why** skills are the exception: their `general-purpose` explorers inherit every connector. The hook blocks every Slack call from them except reads. Only their briefs forbid tracker writes.
-- A committed PreToolUse hook runs on every Slack tool: [`hooks/guard-slack-thread.mjs`](hooks/guard-slack-thread.mjs). In the source channel it allows only thread replies, for posts and file shares alike. From a subagent it allows only Slack reads. It denies the call when it can't check it, and `onFailure: "block"` makes a crash or timeout deny too.
+- A committed PreToolUse hook runs on every Slack tool: [`hooks/guard-slack-thread.mjs`](hooks/guard-slack-thread.mjs). In the source channel it allows only thread replies, for posts and file shares alike. From a subagent it allows only Slack reads. Besides reads, the coordinator may only post, share files, and react, so canvases, lists, and new conversations are blocked. It denies the call when it can't check it, and `onFailure: "block"` makes a crash or timeout deny too.
 - Both tasks fail closed when channel coordinates, tracker access, the control skill, or the feature map are missing or uncertain.
 - Draft pull requests only.
 
