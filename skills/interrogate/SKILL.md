@@ -21,7 +21,7 @@ Package the diff (or file contents) plus any surrounding context files the revie
 
 ## Step 2, State the Intent
 
-Before spawning reviewers, state the intent explicitly. Derive this from:
+Before spawning reviewers, state the intent with the **in-your-own-words** skill. Derive it from:
 
 - The user's message
 - Commit messages
