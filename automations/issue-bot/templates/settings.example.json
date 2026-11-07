@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "ask": [
+      "Bash(gh pr merge *)",
+      "Bash(gh pr ready *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__.*__slack_.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.claude/automations/issue-bot/hooks/guard-slack-thread.mjs",
+              "SOURCE_CHANNEL_ID"
+            ],
+            "onFailure": "block"
+          }
+        ]
+      }
+    ]
+  }
+}

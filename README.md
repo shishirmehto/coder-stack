@@ -9,10 +9,11 @@ A Claude Code plugin of skills and agents that set how a coding agent works: sho
 - **Workflow skills**: `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `reflect`, `figure-it-out`, `tdd`, `recall`, `teach`, `ketchup`, `correct`, `sharpen`, `in-your-own-words`, `show-me-your-work`, `blast-radius`, `benchmark-checklist`, and others.
 - **Verification skills**: `create-verification-skill` and `maintain-verification-skill` give agents a scripted way to drive your app. `create-formal-verification-skill`, `maintain-formal-verification-skill`, and `statechart` check properties that tests rarely reach, such as races and state machines.
 - **Writing skills**: `unslop`, `technical-writing`, and `no-comments`.
+- **Automation skills**: `make-bot-ui` builds a page whose buttons start a cloud scheduled task. `setup-issue-bot` installs the issue bot, two cloud scheduled tasks that triage Slack bug reports and reproduce them into draft pull requests. [`docs/automations.md`](docs/automations.md) walks through both and covers how to define your auto mode.
 - **24 `principle-*` skills**: one engineering principle each. `coder-mode` cites them when they shape a decision.
-- **Two agents**: `coder-stack:coder-agent`, which runs coder-mode, and `coder-stack:comment-sicko`, which reviews code comments.
+- **Two agents**: `coder-stack:coder-agent`, which runs a whole session in coder-mode's style (`claude --agent coder-stack:coder-agent`) or serves as the delegate coder-mode spawns for code-writing and helper tasks, and `coder-stack:comment-sicko`, which reviews code comments.
 
-Skills live in [`skills/`](skills/), agents in [`agents/`](agents/), and the plugin manifest in [`.claude-plugin/`](.claude-plugin/).
+Skills live in [`skills/`](skills/), agents in [`agents/`](agents/), and the plugin manifest in [`.claude-plugin/`](.claude-plugin/). [`automations/`](automations/) holds packs that setup skills copy into your repository. They aren't plugin skills.
 
 ## Install
 
@@ -73,7 +74,13 @@ claude plugin validate .
 ```
 
 ```bash
-cd skills/coder-mode/scripts && bun test orch watch-pr
+cd skills/coder-mode/scripts && bun test watch-pr check-plan
+```
+
+The issue bot's Slack guard hook has its own tests:
+
+```bash
+node --test automations/issue-bot/hooks/guard-slack-thread.test.mjs
 ```
 
 `statechart` has its own tests. The tests that run TLC skip unless `TLA2TOOLS` is set:

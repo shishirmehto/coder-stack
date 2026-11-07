@@ -24,6 +24,19 @@ jobs:
       # No --strict: plugin.json omits `version` on purpose, and --strict fails on that warning.
       - run: claude plugin validate .
 
+  test-hooks:
+    name: Test automation hooks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: node --test automations/issue-bot/hooks/guard-slack-thread.test.mjs
+
   test-scripts:
     name: Test coder-mode scripts
     runs-on: ubuntu-latest
@@ -39,4 +52,4 @@ jobs:
         with:
           bun-version: 1.3.4
       - run: bun install --frozen-lockfile
-      - run: bun test orch watch-pr
+      - run: bun test watch-pr check-plan

@@ -1,0 +1,71 @@
+schema_version: 1
+
+# Copy to .claude/issue-bot/configuration.yaml in the target repository and fill every value.
+# Commit the copy: cloud runs read it from the clone. Keep secret values out of it.
+# The operational files read every key here by name, so a key you add does nothing until they read it.
+# Task names, triggers, and each task's own model are set on the task at claude.ai/code/routines, not here.
+
+slack:
+  source_channel_id: "SOURCE_CHANNEL_ID"
+  operations_channel_id: ""
+  # Runs post through the Slack connector as the task owner's linked Slack account,
+  # so this is that account's user ID. Repro trusts verdicts and status reactions only from it.
+  triage_identity_user_id: "TRIAGE_IDENTITY_USER_ID"
+
+repository:
+  # Pull request links are written as <url>/pull/<number>.
+  url: "https://github.com/example-org/example-repo"
+  default_branch: "main"
+
+tracker:
+  # The claude.ai connector the triage task uses for the tracker, such as Linear or GitHub Issues.
+  adapter: "tracker-connector-placeholder"
+  team: "team-placeholder"
+  project: "project-placeholder"
+  status: "intake-status-placeholder"
+  labels:
+    bug: "bug-label-placeholder"
+    performance: "performance-label-placeholder"
+    intake: "intake-label-placeholder"
+
+routing:
+  map_path: ".claude/issue-bot/routing.md"
+  # Owner pings are off unless one of these is true and the routing map names the owner.
+  allow_feature_owner_ping: false
+  allow_confirmed_regression_author_ping: false
+
+control:
+  # A project skill under .claude/skills/, such as the one /create-verification-skill writes.
+  skill_name: "verify-target-app"
+  feature_map_path: ".claude/skills/verify-target-app/features/"
+  artifact_directory: "/tmp/issue-bot-artifacts"
+  artifact_retention_hours: 24
+
+# Reaction names, without colons, that repro adds to the source root. They show status and mark a report as claimed.
+status_emoji:
+  seen: "eyes"
+  reproducing: "mag"
+  reproduced: "white_check_mark"
+  could_not_reproduce: "white_circle"
+  blocked: "no_entry"
+  fixing: "hammer_and_wrench"
+  fix_failed: "x"
+  pull_request_opened: "link"
+
+budgets:
+  triage_total_minutes: 30
+  triage_follow_up_minutes: 10
+  poll_seconds: 45
+  verdict_wait_minutes: 45
+  repro_minutes: 60
+  rejection_window_minutes: 10
+  fix_minutes: 90
+  operations_follow_up_minutes: 45
+  # Schedule sweeps run at most hourly. Look back further than one hour so a late run misses nothing.
+  sweep_lookback_hours: 3
+  sweep_max_reports: 5
+
+# Passed as the Agent tool's `model` when the coordinator spawns a worker: opus, sonnet, haiku, or fable.
+models:
+  code: "opus"
+  media_review: "sonnet"

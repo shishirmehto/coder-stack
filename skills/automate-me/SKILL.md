@@ -28,7 +28,7 @@ Update mode changes the rest of the flow:
 
 Locate the active workspace's transcripts before fanning out. Its transcript directory is `~/.claude/projects/<slug>/`, the parent of the auto-memory directory the system prompt names (`<slug>` is the absolute working directory with each `/` and `.` turned into `-`). Use only that path. Don't glob across `~/.claude/projects/*/`. That crosses workspace boundaries and reads private chats from unrelated projects.
 
-Survey recent agent conversations within that scope for recurring patterns. Run multiple parallel subagents across slices of history (e.g. last 2-4 weeks, split into 3 slices so each has enough material). Each slice mining subagent reads transcripts from the workspace-scoped path the parent provides, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
+Survey recent agent conversations within that scope for recurring patterns. Run multiple parallel subagents across slices of history (e.g. last 2-4 weeks, split into 3 slices so each has enough material). Pick each subagent's model for the job, per the Subagents section of `${CLAUDE_SKILL_DIR}/../coder-mode/SKILL.md`. Each slice mining subagent reads transcripts from the workspace-scoped path the parent provides, looks for the signals below, and returns a short structured list of patterns it saw with evidence pointers. Default signals worth hunting:
 
 - Response preferences (length, tone, format, "dumb it down" corrections)
 - Delegation habits (subagents, models, specialized workflows, parallelism)
@@ -60,7 +60,7 @@ Group the combined signals into sections. Common ones (use only what applies):
 - **Process**: git worktrees, commits, PRs, review/merge tooling.
 - **Skills**: skill-authoring habits, fix-the-skill-first, proposing new skills.
 
-The **coder-mode** skill shows the shape. Read it for granularity. Don't copy its content. The user's rules are not the same as coder-mode's.
+`${CLAUDE_SKILL_DIR}/../coder-mode/SKILL.md` shows the shape. Read it for granularity. Don't copy its content. The user's rules are not the same as coder-mode's.
 
 ### 4. Draft the skill
 
