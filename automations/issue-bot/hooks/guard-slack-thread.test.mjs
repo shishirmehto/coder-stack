@@ -96,10 +96,19 @@ test("normalizes channel_id before comparing it", () => {
   assert.equal(run(send({})), "deny", "a post with no channel_id");
 });
 
-test("denies destination fields it does not check", () => {
+test("denies any field outside the posting tool's known fields", () => {
   assert.equal(run(send({ channel_id: "C999", channel: "C111" })), "deny");
   assert.equal(run(upload({ channels: "C111" })), "deny", "an upload shared through channels");
   assert.equal(run(send({ channel_id: "C999", channel_name: "bugs" })), "deny");
+  assert.equal(run(send({ channel_id: "C999", blocks: [] })), "deny", "a field added to the schema later");
+  assert.equal(run(send({ channel_id: "C999", unfurl_app_links: true })), "allow", "a known field");
+});
+
+test("denies a destination that isn't a Slack channel or user ID", () => {
+  for (const id of ["#bugs", "bugs", "C111 C222", ""]) {
+    assert.equal(run(send({ channel_id: id, thread_ts: "1" })), "deny", JSON.stringify(id));
+  }
+  assert.equal(run(send({ channel_id: "U0ABC123" })), "allow", "a DM by user ID is outside the guarded channels");
 });
 
 test("denies any reply_broadcast value other than false in a guarded channel", () => {
