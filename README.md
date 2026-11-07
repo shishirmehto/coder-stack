@@ -5,9 +5,11 @@ A Claude Code plugin of skills and agents that set how a coding agent works: sho
 ## What's included
 
 - **`/coder-stack:coder-mode`**: the entry point. It sets the working style and hands off to another skill when that skill's trigger fires.
-- **Workflow skills**: `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `reflect`, `figure-it-out`, `tdd`, `recall`, `teach`, `show-me-your-work`, `blast-radius`, and others.
+- **`/coder-stack:coder-help`**: answers questions about coder-stack and picks the skill, playbook, or principle for a task.
+- **Workflow skills**: `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `reflect`, `figure-it-out`, `tdd`, `recall`, `teach`, `ketchup`, `correct`, `sharpen`, `in-your-own-words`, `show-me-your-work`, `blast-radius`, `benchmark-checklist`, and others.
+- **Verification skills**: `create-verification-skill` and `maintain-verification-skill` give agents a scripted way to drive your app. `create-formal-verification-skill`, `maintain-formal-verification-skill`, and `statechart` check properties that tests rarely reach, such as races and state machines.
 - **Writing skills**: `unslop`, `technical-writing`, and `no-comments`.
-- **23 `principle-*` skills**: one engineering principle each. `coder-mode` cites them when they shape a decision.
+- **24 `principle-*` skills**: one engineering principle each. `coder-mode` cites them when they shape a decision.
 - **Two agents**: `coder-stack:coder-agent`, which runs coder-mode, and `coder-stack:comment-sicko`, which reviews code comments.
 
 Skills live in [`skills/`](skills/), agents in [`agents/`](agents/), and the plugin manifest in [`.claude-plugin/`](.claude-plugin/).
@@ -74,12 +76,19 @@ claude plugin validate .
 cd skills/coder-mode/scripts && bun test orch watch-pr
 ```
 
+`statechart` has its own tests. The tests that run TLC skip unless `TLA2TOOLS` is set:
+
+```bash
+cd skills/statechart/scripts && npm install && npm test
+```
+
 `claude plugin validate --strict` fails on the missing `version`. That is expected, so leave out `--strict`.
 
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code)
 - [Bun](https://bun.sh), for the helper scripts in `skills/coder-mode/scripts`. The scripts install their own `node_modules/` on first run.
+- For `/statechart` only: Node 22.18 or later (or Bun or Deno), and [mise](https://mise.jdx.dev), which installs TLC and Java on the first run. Without mise, set `TLA2TOOLS` to a `tla2tools.jar` and `JAVA` to a Java 11 or later binary.
 
 ## Port notes
 
